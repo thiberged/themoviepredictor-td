@@ -48,7 +48,13 @@ def findAll(table):
     results = cursor.fetchall()
     closeCursor(cursor)
     disconnectDatabase(cnx)
-    return results  
+    return results
+
+def printPerson(person):
+    print("#{}: {} {}".format(person['id'], person['firstname'], person['lastname']))
+
+def printMovie(movie):
+    print("#{}: {} released on {}".format(movie['id'], movie['title'], movie['release_date']))
 
 parser = argparse.ArgumentParser(description='Process MoviePredictor data')
 
@@ -75,20 +81,20 @@ if args.context == "people":
                     writer.writerow(person.values())
         else:
             for person in people:
-                print("#{}: {} {}".format(person['id'], person['firstname'], person['lastname']))
+                printPerson(person)
     if args.action == "find":
         peopleId = args.id
         people = find("people", peopleId)
         for person in people:
-            print("#{}: {} {}".format(person['id'], person['firstname'], person['lastname']))
+            printPerson(person)
 
 if args.context == "movies":
     if args.action == "list":  
         movies = findAll("movies")
         for movie in movies:
-            print("#{}: {} released on {}".format(movie['id'], movie['title'], movie['release_date']))
+            printMovie(movie)
     if args.action == "find":  
         movieId = args.id
         movies = find("movies", movieId)
         for movie in movies:
-            print("#{}: {} released on {}".format(movie['id'], movie['title'], movie['release_date']))
+            printMovie(movie)
