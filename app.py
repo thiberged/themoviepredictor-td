@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 """
 TheMoviePredictor script
 Author: Arnaud de Mouhy <arnaud@admds.net>
