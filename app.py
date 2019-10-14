@@ -10,6 +10,7 @@ import mysql.connector
 import sys
 import argparse
 import csv
+import datetime
 
 def connectToDatabase():
     return mysql.connector.connect(user='predictor', password='predictor',
@@ -33,6 +34,9 @@ def findAllQuery(table):
 
 def insertQuery(table, first, last):
     return ("INSERT INTO {} (firstname, lastname) VALUES ('{}', '{}')".format(table, first, last))
+
+def insertMovieQuery(table, movieTitle, movieDuration, movieOriginalTitle, movieRating, movieRelease):
+    return ("INSERT INTO {} (title, original_title, duration, rating, release_date) VALUES ('{}', '{}', {}, '{}', '{}')".format(table, movieTitle, movieOriginalTitle, movieDuration, movieRating, movieRelease))
 
 def find(table, id):
     cnx = connectToDatabase()
@@ -61,6 +65,14 @@ def insert(table, firstname, lastname):
     closeCursor(cursor)
     disconnectDatabase(cnx)
 
+def insertMovie(table, movieTitle, movieDuration, movieOriginalTitle, movieRating, movieRelease):
+    cnx = connectToDatabase()
+    cursor = createCursor(cnx)
+    cursor.execute(insertMovieQuery(table, movieTitle, movieDuration, movieOriginalTitle, movieRating, movieRelease))
+    cnx.commit()
+    closeCursor(cursor)
+    disconnectDatabase(cnx)
+
 def printPerson(person):
     print("#{}: {} {}".format(person['id'], person['firstname'], person['lastname']))
 
@@ -83,9 +95,10 @@ insert_parser = action_subparser.add_parser('insert', help='Ajout d\'une nouvell
 insert_parser.add_argument('--firstname' , type=str, help='prénom de l\'entité')
 insert_parser.add_argument('--lastname' , type=str, help='nom de l\'entité')
 insert_parser.add_argument('--title' , type=str, help='titre film')
-insert_parser.add_argument('--duration' , help='durée film')
+insert_parser.add_argument('--duration' , type=int, help='durée film')
 insert_parser.add_argument('--original-title' , type=str, dest='original', help='titre original')
-insert_parser.add_argument('--origin-country' , type=str, dest='origin', help='pas de production')
+insert_parser.add_argument('--rating' , type=str, help='rating')
+insert_parser.add_argument('--release-date' , type=lambda s: datetime.datetime.strptime(s, '%Y-%m-%d'), dest='release', help='date de lancement')
 
 args = parser.parse_args()
 
@@ -121,3 +134,10 @@ if args.context == "movies":
         movies = find("movies", movieId)
         for movie in movies:
             printMovie(movie)
+    if args.action == "insert":
+        movieTitle = args.title
+        movieDuration = args.duration
+        movieOriginalTitle = args.original
+        movieRating = args.rating
+        movieRelease = args.release
+        insertMovie("movies", movieTitle, movieDuration, movieOriginalTitle, movieRating, movieRelease)
