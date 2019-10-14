@@ -91,6 +91,9 @@ list_parser.add_argument('--export' , help='Chemin du fichier exportÃ©')
 find_parser = action_subparser.add_parser('find', help='Trouve une entitÃ© selon un paramÃ¨tre')
 find_parser.add_argument('id' , help='Identifant Ã  rechercher')
 
+import_parser = action_subparser.add_parser('import', help='import')
+import_parser.add_argument('--file' , help='fichier importÃ©')
+
 insert_parser = action_subparser.add_parser('insert', help='Ajout d\'une nouvelle entité')
 insert_parser.add_argument('--firstname' , type=str, help='prénom de l\'entité')
 insert_parser.add_argument('--lastname' , type=str, help='nom de l\'entité')
@@ -141,3 +144,13 @@ if args.context == "movies":
         movieRating = args.rating
         movieRelease = args.release
         insertMovie("movies", movieTitle, movieDuration, movieOriginalTitle, movieRating, movieRelease)
+    if args.action == "import":
+        movies = findAll("movies")
+        if args.file:
+            with open(args.file, 'r', encoding='utf-8') as csvfile:
+                reader = csv.reader(csvfile)
+                n=0
+                for row in reader:
+                    if n > 0:
+                        insertMovie("movies", row[0], row[2], row[1], row[3], row[4] )
+                    n = n + 1
