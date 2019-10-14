@@ -31,6 +31,9 @@ def findQuery(table, id):
 def findAllQuery(table):
     return ("SELECT * FROM {}".format(table))
 
+def insertQuery(table, first, last):
+    return ("INSERT INTO {} (firstname, lastname) VALUES ('{}', '{}')".format(table, first, last))
+
 def find(table, id):
     cnx = connectToDatabase()
     cursor = createCursor(cnx)
@@ -50,6 +53,14 @@ def findAll(table):
     disconnectDatabase(cnx)
     return results
 
+def insert(table, firstname, lastname):
+    cnx = connectToDatabase()
+    cursor = createCursor(cnx)
+    cursor.execute(insertQuery(table, firstname, lastname))
+    cnx.commit()
+    closeCursor(cursor)
+    disconnectDatabase(cnx)
+
 def printPerson(person):
     print("#{}: {} {}".format(person['id'], person['firstname'], person['lastname']))
 
@@ -67,6 +78,14 @@ list_parser.add_argument('--export' , help='Chemin du fichier exportÃ©')
 
 find_parser = action_subparser.add_parser('find', help='Trouve une entitÃ© selon un paramÃ¨tre')
 find_parser.add_argument('id' , help='Identifant Ã  rechercher')
+
+insert_parser = action_subparser.add_parser('insert', help='Ajout d\'une nouvelle entité')
+insert_parser.add_argument('--firstname' , type=str, help='prénom de l\'entité')
+insert_parser.add_argument('--lastname' , type=str, help='nom de l\'entité')
+insert_parser.add_argument('--title' , type=str, help='titre film')
+insert_parser.add_argument('--duration' , help='durée film')
+insert_parser.add_argument('--original-title' , type=str, dest='original', help='titre original')
+insert_parser.add_argument('--origin-country' , type=str, dest='origin', help='pas de production')
 
 args = parser.parse_args()
 
@@ -87,6 +106,10 @@ if args.context == "people":
         people = find("people", peopleId)
         for person in people:
             printPerson(person)
+    if args.action == "insert":
+        peopleFirstname = args.firstname
+        peopleLastname = args.lastname
+        insert("people", peopleFirstname, peopleLastname)
 
 if args.context == "movies":
     if args.action == "list":  
