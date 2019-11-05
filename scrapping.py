@@ -10,6 +10,9 @@ import mysql.connector
 import sys
 import argparse
 import csv
+import requests as rq
+import auth_env as ae
+import json
 
 from movie import Movie
 from person import Person
@@ -40,6 +43,8 @@ def insert_people_query(firstname, lastname):
 def insert_movie_query(movie):
     return (f"INSERT INTO `movies` (`title`, `original_title`, `duration`, `rating`, `release_date`) VALUES ('{movie.title}', '{movie.original_title}', {movie.duration}, '{movie.rating}', '{movie.release_date}');")
 
+def tmdb_movie_query(movie):
+    return (f"INSERT INTO `movies` (`title`, `original_title`, `synopsis`, `duration`, `rating`, `release_date`) VALUES ('{movie.title}', '{movie.original_title}', '{movie.synopsis}', {movie.duration}, '{movie.rating}', '{movie.release_date}');")
 
 def find(table, id):
     cnx = connectToDatabase()
@@ -114,17 +119,43 @@ def insert_movie(movie):
     disconnectDatabase(cnx)
     return last_id
 
+def tmdb_movie(movie):
+    cnx = connectToDatabase()
+    cursor = createCursor(cnx)
+    cursor.execute(tmdb_movie_query(movie))
+    cnx.commit()
+    last_id = cursor.lastrowid
+    closeCursor(cursor)
+    disconnectDatabase(cnx)
+    return last_id
+
 def printPerson(person):
     print("#{}: {} {}".format(person.id, person.firstname, person.lastname))
 
 def printMovie(movie):
     print("#{}: {} released on {}".format(movie.id, movie.title, movie.release_date))
 
+def GET_movie(title, date):
+    request_id = rq.get(f"https://api.themoviedb.org/3/search/movie?api_key={ae.tmp_api_key}&query={title}&year={date}")
+    page_id = request_id.text
+    jpage = json.loads(page_id)
+    res  = jpage['results']
+    info = res[0]
+    id = info['id']
+
+    request_movie = rq.get(f"https://api.themoviedb.org/3/movie/{id}?api_key={ae.tmp_api_key}&language=fr")
+    page = request_movie.text
+    return json.loads(page)
+
 parser = argparse.ArgumentParser(description='Process MoviePredictor data')
 
 parser.add_argument('context', choices=('people', 'movies'), help='Le contexte dans lequel nous allons travailler')
 
 action_subparser = parser.add_subparsers(title='action', dest='action')
+
+tmdb_parser = action_subparser.add_parser('tmdb', help='Insert une nouvelle entité depuis tmdb')
+tmdb_parser.add_argument('--title' , help='Titre en France', required=True)
+tmdb_parser.add_argument('--release' , help='année de sortie', required=True)
 
 list_parser = action_subparser.add_parser('list', help='Liste les entitées du contexte')
 list_parser.add_argument('--export' , help='Chemin du fichier exporté')
@@ -148,8 +179,6 @@ if known_args.context == "movies":
     insert_parser.add_argument('--original-title' , help='Titre original', required=True)
     insert_parser.add_argument('--release-date' , help='Date de sortie en France', required=True)
     insert_parser.add_argument('--rating' , help='Classification du film', choices=('TP', '-12', '-16'), required=True)
-
-
 
 args = parser.parse_args()
 
@@ -193,6 +222,28 @@ if args.context == "movies":
         print(f"Insertion d'un nouveau film: {args.title}")
         movie = Movie(args.title, args.original_title, args.duration, args.release_date, args.rating)
         movie_id = insert_movie(movie)
+        print(f"Nouveau film inséré avec l'id '{movie_id}'")
+    if args.action == "tmdb":
+        print(f"Insertion d'un nouveau film depuis tmdb : {args.title} ({args.release})")
+        info = GET_movie(args.title, args.release)
+
+        title = info['title']
+        release_date = info['release_date']
+        original_title = info['original_title']
+        synopsis = info['overview']
+        note = info['vote_average']
+        duration = info['runtime']
+        vote = info['vote_count']
+        boxoffice = info['revenue']
+        rating = "TP"
+
+        movie = Movie(title, original_title, release_date, duration, rating)
+        movie.synopsis = synopsis
+        movie.vote = vote
+        movie.boxoffice = boxoffice
+
+        movie_id = tmdb_movie(movie)
+        
         print(f"Nouveau film inséré avec l'id '{movie_id}'")
     if args.action == "import":
         with open(args.file, 'r', encoding='utf-8', newline='\n') as csvfile:

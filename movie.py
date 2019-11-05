@@ -13,6 +13,9 @@ class Movie:
         self.is_3d = None
         self.production_budget = None
         self.marketing_budget = None
+        self.synopsis = None
+        self.note = None
+        self.boxoffice = None
 
 
     def description_movie(self):
@@ -23,3 +26,4 @@ class Movie:
             return None
 
         return self.production_budget + self.marketing_budget
+
