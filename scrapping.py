@@ -22,7 +22,7 @@ from movie import Movie
 from person import Person
 
 def connectToDatabase():
-    return mysql.connector.connect(user='predictor', password='predictor',
+    return mysql.connector.connect(user='predictor', password=ae.MYSQL_PASSWORD,
                               host='127.0.0.1',
                               database='predictor')
 
@@ -143,26 +143,26 @@ def printMovie(movie):
     print("#{}: {} released on {}".format(movie.id, movie.title, movie.release_date))
 
 def GET_tmdb_movie(title, date):
-    request_id = rq.get(f"https://api.themoviedb.org/3/search/movie?api_key={ae.tmp_api_key}&query={title}&year={date}")
+    request_id = rq.get(f"https://api.themoviedb.org/3/search/movie?api_key={ae.TMDB_API_KEY}&query={title}&year={date}")
     page_id = request_id.text
     jpage = json.loads(page_id)
     res  = jpage['results']
     info = res[0]
     id = info['id']
 
-    request_movie = rq.get(f"https://api.themoviedb.org/3/movie/{id}?api_key={ae.tmp_api_key}&language=fr")
+    request_movie = rq.get(f"https://api.themoviedb.org/3/movie/{id}?api_key={ae.TMDB_API_KEY}&language=fr")
     page = request_movie.text
     return json.loads(page)
 
 def GET_omdb_movie(title, date):
-    request_id = rq.get(f"http://www.omdbapi.com/?apikey={ae.omdb_api_key}&s={title}&y={date}")
+    request_id = rq.get(f"http://www.omdbapi.com/?apikey={ae.OMDB_API_KEY}&s={title}&y={date}")
     page_id = request_id.text
     jpage = json.loads(page_id)
     res  = jpage['Search']
     info = res[0]
     id = info['imdbID']
 
-    request_movie = rq.get(f"http://www.omdbapi.com/?apikey={ae.omdb_api_key}&i={id}")
+    request_movie = rq.get(f"http://www.omdbapi.com/?apikey={ae.OMDB_API_KEY}&i={id}")
     page = request_movie.text
     return json.loads(page)
 
