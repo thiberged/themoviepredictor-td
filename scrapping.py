@@ -15,6 +15,7 @@ import auth_env as ae
 import json
 from html.parser import HTMLParser
 from datetime import datetime
+import os
 
 import html
 
@@ -22,8 +23,9 @@ from movie import Movie
 from person import Person
 
 def connectToDatabase():
-    return mysql.connector.connect(user='predictor', password=ae.MYSQL_PASSWORD,
-                              host='127.0.0.1',
+    passw = os.environ['MYSQL_PASSWORD']
+    return mysql.connector.connect(user='predictor', password=passw,
+                              host='database',
                               database='predictor')
 
 def disconnectDatabase(cnx):
@@ -38,7 +40,7 @@ def closeCursor(cursor):
 def findQuery(table, id):
     return ("SELECT * FROM {} WHERE id = {} LIMIT 1".format(table, id))
 
-def find_movie(title, date):
+def find_movie_query(title, date):
     return (f"SELECT * FROM `movies` WHERE `title` = {title} AND `release_date` = {date}")
 
 def findAllQuery(table):
@@ -265,11 +267,9 @@ if args.context == "movies":
         movie.vote = vote
         movie.boxoffice = boxoffice
 
-        if not find_movie(title, release_date):
-            movie_id = db_movie(movie)
-            print(f"Nouveau film inséré avec l'id '{movie_id}'")
-        else:
-            print("Le film est déjà enregistré")
+        movie_id = db_movie(movie)
+        print(f"Nouveau film inséré avec l'id '{movie_id}'")
+
     if args.action == "omdb":
         print(f"Insertion d'un nouveau film depuis omdb : {args.title} ({args.release})")
         info = GET_omdb_movie(args.title, args.release)
@@ -292,11 +292,9 @@ if args.context == "movies":
         movie.vote = vote
         movie.boxoffice = boxoffice
 
-        if not find_movie(title, release_date):
-            movie_id = db_movie(movie)
-            print(f"Nouveau film inséré avec l'id '{movie_id}'")
-        else:
-            print("Le film est déjà enregistré")
+        movie_id = db_movie(movie)
+        print(f"Nouveau film inséré avec l'id '{movie_id}'")
+
     if args.action == "import":
         with open(args.file, 'r', encoding='utf-8', newline='\n') as csvfile:
             reader = csv.DictReader(csvfile)
