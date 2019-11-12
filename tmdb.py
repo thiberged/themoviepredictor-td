@@ -49,16 +49,4 @@ class Tmdb:
             movie = f"Aucun film avec l'id {id} n'existe dans la base"
             return movie
 
-    def tmdb_get_actors(self, id, api_key):
-        r = requests.get(f'https://api.themoviedb.org/3/movie/{id}?api_key={api_key}')
-        r = r.json()
-        if 'status_code' not in r:
-            actors = r['Actors']
-            for actor in actors:
-                firstname = actor[0]
-                lastname = actor [1]
-
-                app.insert_people(firstname, lastname)
-
-            return actors
 
