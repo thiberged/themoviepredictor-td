@@ -240,12 +240,13 @@ if args.context == "movies":
                 movie_id = insert_movie(movie)
                 print(f"Nouveau film inséré avec l'id {movie_id}")
                 actors = omdb.omdb_get_actors(args.imdb_id, api_key_omdb)
-                for actor in actors:
-                    firstname = actor[0]
-                    lastname = actor [1]
+                if actors != "N/A":
+                    for actor in actors and actors != "N/A":
+                        firstname = actor.split(' ', 1)[0]
+                        lastname = actor.split(' ', 1)[1]
 
-                    insert_people(firstname, lastname)
-                    print(f"{firstname} {lastname} est maintenant enregistré")
+                        insert_people(firstname, lastname)
+                        print(f"{firstname} {lastname} est maintenant enregistré")
             if not args.imdb_id :
                 n = 0
                 while n == 0:
@@ -255,13 +256,15 @@ if args.context == "movies":
                         n = 1
                 movie_id = insert_movie(movie)
                 print(f"Nouveau film inséré avec l'id {movie_id}")
-                actors = omdb.omdb_get_actors(args.imdb_id, api_key_omdb)
-                for actor in actors:
-                    firstname = actor[0]
-                    lastname = actor [1]
+                actors = omdb.omdb_get_actors(imdb_id, api_key_omdb)
+                if actors != "N/A":
+                    act = actors.split(', ')
+                    for actor in act:
+                        firstname = actor.split(' ', 1)[0]
+                        lastname = actor.split(' ', 1)[1]
 
-                    insert_people(firstname, lastname)
-                    print(f"{firstname} {lastname} est maintenant enregistré")
+                        insert_people(firstname, lastname)
+                        print(f"{firstname} {lastname} est maintenant enregistré")
         if args.api == 'tmdb':
             if args.imdb_id :
                 movie = tmdb.tmdb_get_by_id(args.imdb_id, api_key_tmdb)

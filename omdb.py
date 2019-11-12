@@ -24,13 +24,23 @@ class Omdb:
             imdb_id = imdb_id_str.replace("tt", "")
             title = r['Title']
             original_title = r['Title']
+
             release_date_class = r['Released']
-            release_date_strip = release_date_class.strip()
-            release_date_object = datetime.strptime(release_date_strip, '%d %b %Y')
-            release_date = release_date_object.strftime('%Y-%m-%d')
+            if release_date_class == 'N/A':
+                release_date_class = None
+                release_date = None
+            else:
+                release_date_strip = release_date_class.strip()
+                release_date_object = datetime.strptime(release_date_strip, '%d %b %Y')
+                release_date = release_date_object.strftime('%Y-%m-%d')
+
             duration = r['Runtime']
-            duration = duration.split()
-            duration = duration[0]
+            if duration == 'N/A':
+                duration = None
+            else:
+                duration = duration.split()
+                duration = duration[0]
+
             if r['Rated'] == 'R':
                 rating = '-12'
             elif r['Rated'] == 'NC-17':
@@ -56,6 +66,5 @@ class Omdb:
         r = requests.get(f'http://www.omdbapi.com/?i={id}&apikey={api_key}')
         r = r.json()
 
-        print(r)
         actors = r['Actors']
         return actors
