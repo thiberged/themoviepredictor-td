@@ -25,7 +25,7 @@ from person import Person
 from omdb import Omdb
 from tmdb import Tmdb
 
-locale.setlocale(locale.LC_ALL, 'fr_FR')
+# locale.setlocale(locale.LC_ALL, 'fr_FR')
 
 api_key_tmdb = os.environ['TMDB_API_KEY']
 tmdb = Tmdb(api_key_tmdb)
@@ -61,10 +61,7 @@ def insert_people_query(firstname, lastname):
     return (f"INSERT INTO `people` (`firstname`, `lastname`) VALUES ('{firstname}', '{lastname}');")
 
 def insert_movie_query(movie):
-    return (f"INSERT INTO `movies` (`title`, `original_title`, `duration`, `rating`, `release_date`) VALUES ('{movie.title}', '{movie.original_title}', {movie.duration}, '{movie.rating}', '{movie.release_date}');")
-
-def db_movie_query(movie):
-    return (f"INSERT INTO `movies` (`title`, `original_title`, `synopsis`, `duration`, `rating`, `release_date`) VALUES ('{movie.title}', '{movie.original_title}', '{movie.synopsis}', {movie.duration}, '{movie.rating}', '{movie.release_date}');")
+    return (f"INSERT INTO `movies` (`title`, `original_title`, `release_date`, `duration`, `rating`) VALUES ('{movie.title}', '{movie.original_title}', '{movie.release_date}'), {movie.duration}, '{movie.rating}';")
 
 def find(table, id):
     cnx = connectToDatabase()
@@ -77,7 +74,7 @@ def find(table, id):
     if (cursor.rowcount == 1):
         row = results[0]
         if (table == "movies"):
-            entity = Movie(row['title'], row['original_title'], row['duration'], row['release_date'], row['rating'])
+            entity = Movie(row['title'], row['original_title'], row['release_date'], row['duration'], row['rating'])
             entity.id = row['id']
         if table == "people":
             entity = Person(row['firstname'], row['lastname'])
@@ -101,8 +98,8 @@ def findAll(table):
             movie = Movie(
                 title=result['title'],
                 original_title=result['original_title'],
-                duration=result['duration'],
                 release_date=result['release_date'],
+                duration=result['duration'],                
                 rating=result['rating']
             )
             movie.imdb_id = result['imdb_id']
@@ -227,7 +224,7 @@ if args.context == "movies":
             printMovie(movie)
     if args.action == "insert":
         print(f"Insertion d'un nouveau film: {args.title}")
-        movie = Movie(args.title, args.original_title, args.duration, args.release_date, args.rating)
+        movie = Movie(args.title, args.original_title, args.release_date, args.duration, args.rating)
         movie_id = insert_movie(movie)
         print(f"Nouveau film inséré avec l'id '{movie_id}'")
     if args.action == "import":
@@ -248,8 +245,8 @@ if args.context == "movies":
                     movie_id = insert_movie(
                         title=row['title'],
                         original_title=row['original_title'],
+                        release_date=row['release_date'],
                         duration=row['duration'],
-                        rating=row['rating'],
-                        release_date=row['release_date']
+                        rating=row['rating']                        
                     )
                     print(f"Nouveau film inséré avec l'id '{movie_id}'")

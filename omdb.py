@@ -45,7 +45,7 @@ class Omdb:
                 box_office = None
             imdb_score = r['imdbRating']
 
-            movie = Movie(title, original_title, duration, release_date, rating)
+            movie = Movie(title, original_title, release_date, duration, rating)
             movie.imdb_id = imdb_id
             movie.imdb_score = imdb_score
             movie.box_office = box_office
