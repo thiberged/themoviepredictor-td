@@ -5,7 +5,6 @@ from movie import Movie
 from datetime import datetime
 import locale
 import os
-import app
 
 # locale.setlocale(locale.LC_ALL, 'en_US')
 
@@ -50,3 +49,4 @@ class Tmdb:
             return movie
 
 
+    

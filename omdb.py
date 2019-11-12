@@ -55,7 +55,7 @@ class Omdb:
     def omdb_get_actors(self, id, api_key):
         r = requests.get(f'http://www.omdbapi.com/?i={id}&apikey={api_key}')
         r = r.json()
-        if 'status_code' not in r:
-            actors = r['Actors']
 
-            return actors
+        print(r)
+        actors = r['Actors']
+        return actors

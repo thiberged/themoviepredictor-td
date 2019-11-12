@@ -245,6 +245,7 @@ if args.context == "movies":
                     lastname = actor [1]
 
                     insert_people(firstname, lastname)
+                    print(f"{firstname} {lastname} est maintenant enregistré")
             if not args.imdb_id :
                 n = 0
                 while n == 0:
@@ -260,6 +261,7 @@ if args.context == "movies":
                     lastname = actor [1]
 
                     insert_people(firstname, lastname)
+                    print(f"{firstname} {lastname} est maintenant enregistré")
         if args.api == 'tmdb':
             if args.imdb_id :
                 movie = tmdb.tmdb_get_by_id(args.imdb_id, api_key_tmdb)
