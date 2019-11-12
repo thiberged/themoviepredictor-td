@@ -6,7 +6,7 @@ from datetime import datetime
 import locale
 import os
 
-locale.setlocale(locale.LC_ALL, 'en_US')
+# locale.setlocale(locale.LC_ALL, 'en_US')
 
 class Tmdb:
 
