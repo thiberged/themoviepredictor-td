@@ -18,7 +18,7 @@ class Omdb:
         r = requests.get(f'http://www.omdbapi.com/?i={id}&apikey={api_key}')
         r = r.json()
         if r['Response'] == "False":
-            movie = f"Aucun film avec l'id {id} n'existe dans OMDBapi"
+            movie = f"Aucun film avec l'id {id} n'existe pas dans la base"
             return movie
         else:
             imdb_id_str = r['imdbID']

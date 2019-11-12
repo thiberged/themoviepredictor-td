@@ -26,7 +26,7 @@ from tmdb import Tmdb
 locale.setlocale(locale.LC_ALL, 'fr_FR')
 
 api_key_tmdb = os.environ['TMDB_API_KEY']
-tmdb = TheMoviedb(api_key_tmdb)
+tmdb = Tmdb(api_key_tmdb)
 
 api_key_omdb = os.environ['OMDB_API_KEY']
 omdb = Omdb(api_key_omdb)
