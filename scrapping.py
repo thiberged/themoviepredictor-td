@@ -231,13 +231,13 @@ if args.context == "movies":
         if args.api == 'omdb':
             if args.imdb_id :
                 movie = omdb.omdb_get_by_id(args.imdb_id, api_key_omdb)
-                insert_movie(movie)
-                print(f"Nouveau film inséré avec l'id {movie.id}")
+                movie_id = insert_movie(movie)
+                print(f"Nouveau film inséré avec l'id {movie_id}")
         if args.api == 'themoviedb':
             if args.imdb_id :
                 movie = tmdb.tmdb_get_by_id(args.imdb_id, api_key_tmdb)
-                insert_movie(movie)
-                print(f"Nouveau film inséré avec l'id {movie.id}")
+                movie_id = insert_movie(movie)
+                print(f"Nouveau film inséré avec l'id {movie_id}")
         if not args.api:
             with open(args.file, 'r', encoding='utf-8', newline='\n') as csvfile:
                 reader = csv.DictReader(csvfile)
