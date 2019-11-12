@@ -235,7 +235,7 @@ if args.context == "movies":
                 movie_id = insert_movie(movie)
                 print(f"Nouveau film inséré avec l'id {movie_id}")
             if not args.imdb_id :
-                imdb_id = "tt" + str(random.randint(0,9999999).bit_length(7).rjust(7,'0'))
+                imdb_id = "tt" + str(random.randint(0,9999999).rjust(7,'0'))
                 movie = omdb.omdb_get_by_id(imdb_id, api_key_omdb)
                 movie_id = insert_movie(movie)
                 print(f"Nouveau film inséré avec l'id {movie_id}")
@@ -245,7 +245,7 @@ if args.context == "movies":
                 movie_id = insert_movie(movie)
                 print(f"Nouveau film inséré avec l'id {movie_id}")
             if not args.imdb_id :
-                imdb_id = "tt" + str(random.randint(0,9999999).bit_length(7).rjust(7,'0'))
+                imdb_id = "tt" + str(random.randint(0,9999999).rjust(7,'0'))
                 movie = tmdb.tmdb_get_by_id(imdb_id, api_key_tmdb)
                 movie_id = insert_movie(movie)
                 print(f"Nouveau film inséré avec l'id {movie_id}")
