@@ -30,7 +30,7 @@ class Tmdb:
             imdb_id = imdb_id.replace("tt", "")
             imdb_score = r['vote_average']
             synopsis = r['overview']
-            production_budget = r['bugdet']
+            production_budget = r['budget']
             movie = Movie(title, original_title, release_date, duration, rating)
             movie.imdb_id = imdb_id
             movie.imdb_score = imdb_score
