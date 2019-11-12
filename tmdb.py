@@ -5,6 +5,7 @@ from movie import Movie
 from datetime import datetime
 import locale
 import os
+import app
 
 # locale.setlocale(locale.LC_ALL, 'en_US')
 
@@ -35,7 +36,29 @@ class Tmdb:
             movie.imdb_id = imdb_id
             movie.imdb_score = imdb_score
             movie.box_office = box_office
+
+            actors = r['Actors']
+            for actor in actors:
+                firstname = actor[0]
+                lastname = actor [1]
+
+                app.insert_people(firstname, lastname)
+
             return movie
         if r['status_code'] == 34:
             movie = f"Aucun film avec l'id {id} n'existe dans la base"
             return movie
+
+    def tmdb_get_actors(self, id, api_key):
+        r = requests.get(f'https://api.themoviedb.org/3/movie/{id}?api_key={api_key}')
+        r = r.json()
+        if 'status_code' not in r:
+            actors = r['Actors']
+            for actor in actors:
+                firstname = actor[0]
+                lastname = actor [1]
+
+                app.insert_people(firstname, lastname)
+
+            return actors
+
