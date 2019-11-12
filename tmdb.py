@@ -9,7 +9,7 @@ import os
 
 locale.setlocale(locale.LC_ALL, 'en_US')
 
-class TheMoviedb:
+class Tmdb:
 
     def __init__(self, api_key):
         self.api_key = api_key
@@ -30,16 +30,13 @@ class TheMoviedb:
             imdb_id = r['imdb_id']
             imdb_id = imdb_id.replace("tt", "")
             imdb_score = r['vote_average']
-            # synopsis = r['overview']
-            # production_budget = r['bugdet']
-            movie = Movie(imdb_id, title, original_title, duration, release_date, rating, imdb_score, box_office)
+            synopsis = r['overview']
+            production_budget = r['bugdet']
+            movie = Movie(title, original_title, duration, release_date, rating)
+            movie.imdb_id = imdb_id
+            movie.imdb_score = imdb_score
+            movie.box_office = box_office
             return movie
         if r['status_code'] == 34:
-            movie = f"Aucun film avec l'id {id} n'existe dans TMDBapi"
+            movie = f"Aucun film avec l'id {id} n'existe dans la base"
             return movie
-
-    # def omdb_gat_by_year(self, year):
-
-# film = TheMoviedb(api_key_tmdb)
-# Film = film.tmdb_get_by_id('550')
-# print(Film)

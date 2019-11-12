@@ -9,10 +9,6 @@ import os
 
 locale.setlocale(locale.LC_ALL, 'en_US')
 
-
-# with open('omdbapikey.txt', 'r') as file:
-#     api_key = file.read()
-
 class Omdb:
 
     def __init__(self, api_key):
@@ -50,20 +46,8 @@ class Omdb:
                 box_office = None
             imdb_score = r['imdbRating']
 
-            movie = Movie(imdb_id, title, original_title, duration, release_date, rating, imdb_score, box_office)
+            movie = Movie(title, original_title, duration, release_date, rating)
+            movie.imdb_id = imdb_id
+            movie.imdb_score = imdb_score
+            movie.box_office = box_office
             return movie
-
-    # def omdb_gat_by_year(self, year):
-        
-    
-# film = Omdb(api_key)
-# Film = film.omdb_get_by_id('tt7286456', api_key)
-# print(Film.imdb_id)
-
-
-
-
-# class Get_movie:
-#     def __init__(self, url, id):
-#         self.url = url
-#         # self.id = id

@@ -8,6 +8,7 @@ class Movie:
         self.rating = rating
 
         self.id = None
+        self.imdb_id = None
         self.actors = []
         self.productors = []
         self.is_3d = None

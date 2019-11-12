@@ -21,7 +21,7 @@ import os
 from movie import Movie
 from person import Person
 from omdb import Omdb
-from tmdb import TheMoviedb
+from tmdb import Tmdb
 
 locale.setlocale(locale.LC_ALL, 'fr_FR')
 

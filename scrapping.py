@@ -21,6 +21,8 @@ import html
 
 from movie import Movie
 from person import Person
+from omdb import Omdb
+from tmdb import TheMoviedb
 
 def connectToDatabase():
     passw = os.environ['MYSQL_PASSWORD']
