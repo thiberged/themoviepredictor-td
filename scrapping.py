@@ -16,6 +16,7 @@ import json
 from html.parser import HTMLParser
 from datetime import datetime
 import os
+import locale
 
 import html
 
@@ -23,6 +24,8 @@ from movie import Movie
 from person import Person
 from omdb import Omdb
 from tmdb import Tmdb
+
+locale.setlocale(locale.LC_ALL, 'fr_FR')
 
 api_key_tmdb = os.environ['TMDB_API_KEY']
 tmdb = Tmdb(api_key_tmdb)
@@ -160,7 +163,7 @@ find_parser.add_argument('id' , help='Identifant à rechercher')
 insert_parser = action_subparser.add_parser('insert', help='Insert une nouvelle entité')
 
 import_parser = action_subparser.add_parser('import', help='Importer un fichier CSV')
-import_parser.add_argument('--file', help='Chemin vers le fichier à importer', required=True)
+import_parser.add_argument('--file', help='Chemin vers le fichier à importer')
 import_parser.add_argument('--api', help='nom de API utilisée')
 
 known_args = parser.parse_known_args()[0]

@@ -4,7 +4,6 @@ from pprint import pprint
 from movie import Movie
 from datetime import datetime
 import locale
-import isodate
 import os
 
 locale.setlocale(locale.LC_ALL, 'en_US')
