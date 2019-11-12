@@ -61,7 +61,7 @@ def insert_people_query(firstname, lastname):
     return (f"INSERT INTO `people` (`firstname`, `lastname`) VALUES ('{firstname}', '{lastname}');")
 
 def insert_movie_query(movie):
-    return (f"INSERT INTO `movies` (`title`, `original_title`, `release_date`, `duration`, `rating`) VALUES ('{movie.title}', '{movie.original_title}', '{movie.release_date}'), {movie.duration}, '{movie.rating}';")
+    return (f"INSERT INTO `movies` (`title`, `original_title`, `release_date`, `duration`, `rating`) VALUES ('{movie.title}', '{movie.original_title}', '{movie.release_date}', {movie.duration}, '{movie.rating}');")
 
 def find(table, id):
     cnx = connectToDatabase()

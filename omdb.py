@@ -28,15 +28,15 @@ class Omdb:
             release_date_strip = release_date_class.strip()
             release_date_object = datetime.strptime(release_date_strip, '%d %b %Y')
             release_date = release_date_object.strftime('%Y-%m-%d')
+            duration = r['Runtime']
+            duration = duration.split()
+            duration = duration[0]
             if r['Rated'] == 'R':
                 rating = '-12'
             elif r['Rated'] == 'NC-17':
                 rating = '-16'
             else:
                 rating = 'TP'
-            duration = r['Runtime']
-            duration = duration.split()
-            duration = duration[0]
             if r['Type']=="movie":
                 box_office = r['BoxOffice']
                 if r['BoxOffice'] == 'N/A':
