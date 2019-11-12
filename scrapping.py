@@ -17,6 +17,7 @@ from html.parser import HTMLParser
 from datetime import datetime
 import os
 import locale
+import random
 
 import html
 
@@ -233,9 +234,19 @@ if args.context == "movies":
                 movie = omdb.omdb_get_by_id(args.imdb_id, api_key_omdb)
                 movie_id = insert_movie(movie)
                 print(f"Nouveau film inséré avec l'id {movie_id}")
+            if not args.imdb_id :
+                imdb_id = "tt" + str(random(7))
+                movie = omdb.omdb_get_by_id(imdb_id, api_key_omdb)
+                movie_id = insert_movie(movie)
+                print(f"Nouveau film inséré avec l'id {movie_id}")
         if args.api == 'tmdb':
             if args.imdb_id :
                 movie = tmdb.tmdb_get_by_id(args.imdb_id, api_key_tmdb)
+                movie_id = insert_movie(movie)
+                print(f"Nouveau film inséré avec l'id {movie_id}")
+            if not args.imdb_id :
+                imdb_id = "tt" + str(random(7))
+                movie = tmdb.tmdb_get_by_id(imdb_id, api_key_tmdb)
                 movie_id = insert_movie(movie)
                 print(f"Nouveau film inséré avec l'id {movie_id}")
         if not args.api:
